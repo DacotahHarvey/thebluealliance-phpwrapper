@@ -6,12 +6,12 @@ include 'callable.php';
 
 use tbaAPI\cURLCallable as cURLCallable;
 
-class TBARequest extends cURLCallable {
+class TBARequest array_merges cURLCallable {
 
 	/*
 	 * Base params for all of our endpoints. Each of these arrays require the
 	 * bare minimum that we need to make all of our requests. We override these arrays
-	 * when we actually make the request to the API (see the extend function).
+	 * when we actually make the request to the API (see the array_merge function).
 	 * This will ensure that we will always have the bare minimum required. These
 	 * example are also pulled directly the The Blue Alliance website
 	 */
@@ -53,30 +53,6 @@ class TBARequest extends cURLCallable {
 	}
 
 	/**
-	 * Helper function to build our conditions array for us. This will take the
-	 * base params array that we set for each section and combine it with the
-	 * array params that we passed in. This will give us all the parameters that we
-	 * need to make every call even if they weren't provided
-	 * @param  Array $base_array - The array that we defined (at the time of the file)
-	 * @param  Array $new_array  - The array that the user passed to each request
-	 * @return Object - The combination of both arrays
-	 */
-	private function extend($base_array, $new_array) {
-
-		$return_array = [];
-
-		foreach ($base_array as $index_key => $index_value) {
-			if (isset($new_array->$index_key) && !empty($new_array->index_key)) {
-				$return_array['$index_key'] = $new_array->$index_key;
-			} else {
-				$return_array['$index_key'] = $index_value;
-			}
-		}
-
-		return (object) $return_array;
-	}
-
-	/**
 	 * A simple function that allows us to display the response of the server
 	 * in a nice manner. Since everything is returned as JSON you could also use
 	 * a website such as https://jsonformatter.curiousconcept.com/
@@ -101,7 +77,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getDistrictList($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->district_base_params, $request_parameters);
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
 		return $this->call("districts/{$request_parameters->year}", $headers, $full_response);
 	}
 
@@ -119,7 +95,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getDistrictEvents($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->district_base_params, $request_parameters);
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
 		return $this->call("district/{$request_parameters->district_short}/{$request_parameters->year}/events", $headers, $full_response);
 	}
 
@@ -137,7 +113,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getDistrictRankings($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->district_base_params, $request_parameters);
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
 		return $this->call("district/{$request_parameters->district_short}/{$request_parameters->year}/teams", $headers, $full_response);
 	}
 
@@ -154,7 +130,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEvents($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("events/{$request_parameters->year}", $headers, $full_response);
 	}
 
@@ -168,7 +144,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEvent($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}", $headers, $full_response);
 	}
 
@@ -182,7 +158,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEventTeams($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}/teams", $headers, $full_response);
 	}
 
@@ -196,7 +172,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEventMatches($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}/matches", $headers, $full_response);
 	}
 
@@ -210,7 +186,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEventStats($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}/stats", $headers, $full_response);
 	}
 
@@ -225,7 +201,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEventRankings($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}/rankings", $headers, $full_response);
 	}
 
@@ -239,7 +215,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEventAwards($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}/awards", $headers, $full_response);
 	}
 
@@ -253,7 +229,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getEventDistricPoints($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("event/{$request_parameters->event_key}/district_points", $headers, $full_response);
 	}
 
@@ -269,7 +245,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getSingleMatch($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("match/{$request_parameters->match_key}", $headers, $full_response);
 	}
 
@@ -288,7 +264,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeams($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("teams/{$request_parameters->page_num}", $headers, $full_response);
 	}
 
@@ -302,7 +278,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeam($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}", $headers, $full_response);
 	}
 
@@ -320,7 +296,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamEvents($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/events", $headers, $full_response);
 	}
 
@@ -338,7 +314,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamEventAwards($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/event/{$request_parameters->event_key}/awards", $headers, $full_response);
 	}
 
@@ -356,7 +332,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamEventMatches($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/event/{$request_parameters->event_key}/matches", $headers, $full_response);
 	}
 
@@ -370,7 +346,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamYearsParticipated($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/years_participated", $headers, $full_response);
 	}
 
@@ -389,7 +365,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamMedia($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/{$request_parameters->year}/media", $headers, $full_response);
 	}
 
@@ -407,7 +383,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamEventHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/history/events", $headers, $full_response);
 	}
 
@@ -421,7 +397,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamAwardHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/history/awards", $headers, $full_response);
 	}
 
@@ -436,7 +412,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamRobotHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/history/robots", $headers, $full_response);
 	}
 
@@ -452,7 +428,7 @@ class TBARequest extends cURLCallable {
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getTeamDistricHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = extend($this->event_base_params, $request_parameters);
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("team/{$request_parameters->team_key}/history/districts", $headers, $full_response);
 	}
 }
