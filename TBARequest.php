@@ -6,7 +6,7 @@ include 'callable.php';
 
 use tbaAPI\cURLCallable as cURLCallable;
 
-class TBARequest array_merges cURLCallable {
+class TBARequest extends cURLCallable {
 
 	/*
 	 * Base params for all of our endpoints. Each of these arrays require the
