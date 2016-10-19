@@ -78,7 +78,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getDistrictList($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
-		return $this->call("districts/{$request_parameters->year}", $headers, $full_response);
+		return $this->call("districts/{$request_parameters['year']}", $headers, $full_response);
 	}
 
 	/**
@@ -96,7 +96,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getDistrictEvents($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
-		return $this->call("district/{$request_parameters->district_short}/{$request_parameters->year}/events", $headers, $full_response);
+		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/events", $headers, $full_response);
 	}
 
 	/**
@@ -114,7 +114,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getDistrictRankings($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
-		return $this->call("district/{$request_parameters->district_short}/{$request_parameters->year}/teams", $headers, $full_response);
+		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/teams", $headers, $full_response);
 	}
 
 	//======================================================================
@@ -131,7 +131,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEvents($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("events/{$request_parameters->year}", $headers, $full_response);
+		return $this->call("events/{$request_parameters['year']}", $headers, $full_response);
 	}
 
 	/**
@@ -145,7 +145,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEvent($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}", $headers, $full_response);
 	}
 
 	/**
@@ -159,7 +159,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEventTeams($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}/teams", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/teams", $headers, $full_response);
 	}
 
 	/**
@@ -173,7 +173,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEventMatches($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}/matches", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/matches", $headers, $full_response);
 	}
 
 	/**
@@ -187,7 +187,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEventStats($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}/stats", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/stats", $headers, $full_response);
 	}
 
 	/**
@@ -202,7 +202,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEventRankings($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}/rankings", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/rankings", $headers, $full_response);
 	}
 
 	/**
@@ -216,7 +216,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEventAwards($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}/awards", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/awards", $headers, $full_response);
 	}
 
 	/**
@@ -230,7 +230,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getEventDistricPoints($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters->event_key}/district_points", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/district_points", $headers, $full_response);
 	}
 
 	//======================================================================
@@ -246,7 +246,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getSingleMatch($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("match/{$request_parameters->match_key}", $headers, $full_response);
+		return $this->call("match/{$request_parameters['match_key']}", $headers, $full_response);
 	}
 
 	//======================================================================
@@ -265,7 +265,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeams($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("teams/{$request_parameters->page_num}", $headers, $full_response);
+		return $this->call("teams/{$request_parameters['page_num']}", $headers, $full_response);
 	}
 
 	/**
@@ -279,7 +279,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeam($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}", $headers, $full_response);
 	}
 
 	/**
@@ -297,7 +297,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamEvents($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/events", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/events", $headers, $full_response);
 	}
 
 	/**
@@ -315,7 +315,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamEventAwards($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/event/{$request_parameters->event_key}/awards", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/awards", $headers, $full_response);
 	}
 
 	/**
@@ -333,7 +333,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamEventMatches($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/event/{$request_parameters->event_key}/matches", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/matches", $headers, $full_response);
 	}
 
 	/**
@@ -347,7 +347,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamYearsParticipated($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/years_participated", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/years_participated", $headers, $full_response);
 	}
 
 	/**
@@ -366,7 +366,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamMedia($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/{$request_parameters->year}/media", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/{$request_parameters['year']}/media", $headers, $full_response);
 	}
 
 	//======================================================================
@@ -384,7 +384,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamEventHistory($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/history/events", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/history/events", $headers, $full_response);
 	}
 
 	/**
@@ -398,7 +398,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamAwardHistory($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/history/awards", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/history/awards", $headers, $full_response);
 	}
 
 	/**
@@ -413,7 +413,7 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamRobotHistory($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/history/robots", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/history/robots", $headers, $full_response);
 	}
 
 	/**
@@ -429,6 +429,6 @@ class TBARequest extends cURLCallable {
 	 */
 	public function getTeamDistricHistory($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters->team_key}/history/districts", $headers, $full_response);
+		return $this->call("team/{$request_parameters['team_key']}/history/districts", $headers, $full_response);
 	}
 }
