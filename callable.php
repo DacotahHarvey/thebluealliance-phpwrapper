@@ -39,10 +39,10 @@ class cURLCallable {
 	 * Our actual cURL request to the Blue Alliance Server. This is where we
 	 * compile all of our headers as well as any other information thar we need
 	 * to actually make the request. This is where the bulk of the work is done
-	 * @param  [type]  $url                    [description]
-	 * @param  [type]  $request_parameters     [description]
-	 * @param  boolean $return_response_status [description]
-	 * @return [type]                          [description]
+	 * @param  string  $url                    - The URL that you want to retrieve data from
+	 * @param  array   $request_parameters     - Key/Value pair array of headers / values that you wish to set
+	 * @param  boolean $return_response_status - Determines whether or not you want the response status in the return array
+	 * @return Array
 	 */
 	public function call($url, $request_parameters = [], $return_response_status = false) {
 
