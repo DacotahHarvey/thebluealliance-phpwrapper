@@ -40,16 +40,22 @@ class TBARequest extends cURLCallable {
 	    "year" 		=> 2016
 	];
 
-	/**
-	 * The Constructor is what we use to actually build our reference. In this case
-	 * it accepts everything the cURLCallable constructor takes and hands it up
-	 * to the parent object.
-	 * @param String $__team                - Team Number / Your Name
-	 * @param String $__project_description - Short description of what your app is meant to accomplish
-	 * @param String $__project_version     - The version that your app is currently in
+    /**
+	 * The Constructor allows us to actually create our cURLCallable object
+	 * that we will use to make our cURL request the The Blue Alliance.
+	 * This Constructor takes in the information that we need for the unique
+	 * header that we have to send as well as build that header for us
+	 * @param Integer | String $__team                - Team Number / Your Name
+	 * @param String           $__project_description - Short description of what your app is meant to accomplish
+	 * @param Integer | String $__project_version     - The version that your app is currently in
+	 * @param Array            $__options             - Any additional parameters that have been made available
+     *                         @param Boolean return_json - Whether you want to be returned
+     *                                                      a JSON array straight from the API,
+     *                                                      or an object that can easily be manipulated
+     *                                                      by PHP
 	 */
-	public function  __construct($__team, $__project_description, $__project_version) {
-		parent::__construct($__team, $__project_description, $__project_version);
+	public function  __construct($__team, $__project_description, $__project_version, $__options = []) {
+		parent::__construct($__team, $__project_description, $__project_version, $__options);
 	}
 
 	/**
@@ -57,7 +63,6 @@ class TBARequest extends cURLCallable {
 	 * in a nice manner. Since everything is returned as JSON you could also use
 	 * a website such as https://jsonformatter.curiousconcept.com/
 	 * @param  ANY $array - The item that you want to display.
-	 * @return [type]        [description]
 	 */
 	public function prettyPrint($array) {
 		echo "<pre>{$array}</pre>";

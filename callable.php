@@ -19,20 +19,55 @@ class cURLCallable {
 	// Base URL that we are going to call
 	private $base_url = "https://thebluealliance.com/api/v2/";
 
+    // Any additional options that were passed through the request
+    private $return_json = false;
+
 	/**
 	 * The Constructor allows us to actually create our cURLCallable object
 	 * that we will use to make our cURL request the The Blue Alliance.
 	 * This Constructor takes in the information that we need for the unique
 	 * header that we have to send as well as build that header for us
-	 * @param String $__team                - Team Number / Your Name
-	 * @param String $__project_description - Short description of what your app is meant to accomplish
-	 * @param String $__project_version     - The version that your app is currently in
+	 * @param Integer | String $__team                - Team Number / Your Name
+	 * @param String           $__project_description - Short description of what your app is meant to accomplish
+	 * @param Integer | String $__project_version     - The version that your app is currently in
+	 * @param Array            $__options             - Any additional parameters that have been made available
+     *                         @param Boolean return_json - Whether you want to be returned
+     *                                                      a JSON array straight from the API,
+     *                                                      or an object that can easily be manipulated
+     *                                                      by PHP
 	 */
-	public function  __construct($__team, $__project_description, $__project_version) {
-		$this->team 				= $__team;
+	public function  __construct($__team, $__project_description, $__project_version, $__options) {
+
+        // Ensure that all of the data provided is valid and can be properly
+        // utilised
+        if (!is_string($__team) && !is_integer($__team)) {
+            throw new \Exception("The Team provided must be a String or an Integer");
+        }
+
+        if (!is_string($__project_description)) {
+            throw new \Exception("The Project Description provided must be a String");
+        }
+
+        if (!is_string($__project_version) && !is_integer($__project_version)) {
+            throw new \Exception("The team provided must be a String or an Integer");
+        }
+
+        if (!is_array($__options)) {
+            throw new \Exception("The options provided must be in the form of a Key => Value array.");
+        }
+
+        $this->team 				= $__team;
 		$this->project_description 	= $__project_description;
 		$this->project_version 		= $__project_version;
 		$this->app_header 			= "{$this->team}:{$this->project_description}:{$this->project_version}";
+
+        // Iterate over each of the options that were provided in the Array.
+        // We will set the private variable to be the value of the option
+        // that was passed. If an option was passed that doesn't exist then
+        // we will silently fail as nothing terrible is actually happening
+        foreach ($__options as $option_name => $option_value) {
+            $this->$option_name = $option_value;
+        }
 	}
 
 	/**
@@ -46,6 +81,9 @@ class cURLCallable {
 	 */
 	public function call($url, $request_parameters = [], $return_response_status = false) {
 
+        /*----------------------------------------------------------------------
+        --------------------------------cURL Execution--------------------------
+        ----------------------------------------------------------------------*/
 		$curl = curl_init();
 
 		// Set our default headers that we know will be set everytime
@@ -81,20 +119,31 @@ class cURLCallable {
 		// End the cURL request to free up data
 	    curl_close($curl);
 
+        /*----------------------------------------------------------------------
+        --------------------------------Data Return-----------------------------
+        ----------------------------------------------------------------------*/
+
+        // If the user specified that they wanted an object returned rather than
+        // the API's JSON, we can decode it here before we do any further
+        // interaction
+        if (!$this->return_json) {
+            $result = json_decode($result);
+        }
+
 		// Return our response to the user
 		if ($result_status['http_code'] == 200) {
 			if ($return_response_status) {
-				$result_status['data'] = $result;
+                $result_status['data'] = $result;
 				return $result_status;
 			}
 
 			return $result;
 		} elseif ($result_status['http_code'] == 404) {
-			throw new NotFoundException("The requested URL was not found.");
+			throw new \Exception("The requested URL was not found.");
 		} elseif ($result_status['http_code'] == 301) {
-			throw new MovedException("The requested URL has moved.");
+			throw new \Exception("The requested URL has moved.");
 		} else {
-			throw new Exception("An error has occured with code {$result_status['http_code']}");
+			throw new \Exception("An error has occured with code {$result_status['http_code']}");
 		}
 	}
 }
