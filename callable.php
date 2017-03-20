@@ -31,10 +31,10 @@ class cURLCallable {
 	 * @param String           $__project_description - Short description of what your app is meant to accomplish
 	 * @param Integer | String $__project_version     - The version that your app is currently in
 	 * @param Array            $__options             - Any additional parameters that have been made available
-     *                         @param Boolean return_json - Whether you want to be returned
-     *                                                      a JSON array straight from the API,
-     *                                                      or an object that can easily be manipulated
-     *                                                      by PHP
+     *                                                @param Boolean return_json - Whether you want to be returned
+     *                                                                             a JSON array straight from the API,
+     *                                                                             or an object that can easily be manipulated
+     *                                                                             by PHP
 	 */
 	public function  __construct($__team, $__project_description, $__project_version, $__options) {
 
