@@ -106,21 +106,18 @@
                 // in the alliance iteration above
                 $match_data_container['match_count']++;
 
-                // See the longer comment just inside the foreach below. This variable is
-                // used for the same purpose
-                $first_alliance_had_all_robots_ready = 1;
+                // These variables are used to keep track of items that we keep track
+                // of on a match level. For example if the first alliance we check had
+                // 40kPa then we would ignore it for the second alliance. This ensures
+                // that it only gets counted once per match. The other variables work
+                // in a similar fashion
+                $first_alliance_had_all_robots_ready = false;
+                $kpa_counted = false;
+                $rotor_counted = false;
 
                 // Iterate over each of the score breakdowns that are provided. This will give
                 // us detailed information about how each of the alliances performed
                 foreach ($match->score_breakdown as $alliance_colour => $alliance_result) {
-
-                    // These variables are used to keep track of items that we keep track
-                    // of on a match level. For example if the first alliance we check had
-                    // 40kPa then we would ignore it for the second alliance. This ensures
-                    // that it only gets counted once per match. The other variables work
-                    // in a similar fashion
-                    $kpa_counted = false;
-                    $rotor_counted = false;
 
                     foreach ($alliance_result as $alliance_key => $alliance_datum) {
 
@@ -203,10 +200,10 @@
                                     // didn't then we flip the variable for the next iteration.
                                     // This is safe to do since there will only ever be 2
                                     // alliances playing so we can never get any false positives
-                                    if ($first_alliance_had_all_robots_ready === 2) {
+                                    if ($first_alliance_had_all_robots_ready) {
                                         $match_data_container['match_with_all_robots_ready_for_takeoff']++;
                                     } else {
-                                        $first_alliance_had_all_robots_ready = 2;
+                                        $first_alliance_had_all_robots_ready = true;
                                     }
                                 }
                             break;
