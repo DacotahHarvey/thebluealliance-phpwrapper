@@ -1,0 +1,17 @@
+{
+    "name": "dacotahharvey/thebluealliance-phpwrapper",
+    "type": "library",
+    "description": "PHP based API Wrapper for The Blue Alliance",
+    "keywords": ["frc","thebluealliance", "api-wrapper", "php"],
+    "homepage": "https://github.com/DacotahHarvey/thebluealliance-phpwrapper",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dacotah Harvey",
+            "email": "Dacotahj.Harvey@gmail.com",
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    }
+}
