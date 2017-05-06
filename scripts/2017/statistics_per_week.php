@@ -33,7 +33,10 @@
     if (isset($argv[1])) {
         $target_week = $argv[1];
     } else {
-        echo 'Please provide an event as an argument. The proper execution for this script is \n php statistics_per_week.php {week_number}';
+        print_r(
+            "Please provide an event as an argument. The proper execution for this script is \n" .
+            "php statistics_per_week.php {week_number}"
+        );
         die();
     }
 

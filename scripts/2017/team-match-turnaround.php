@@ -21,14 +21,20 @@
     if (isset($argv[1])) {
         $target_event = $argv[1];
     } else {
-        echo 'Please provide an event as an argument. The proper execution for this script is \n php team-match-turnaround {event_code} {team_number}';
+        print_r(
+            "Please provide an event as an argument. The proper execution for this script is \n" .
+            "php team-match-turnaround {event_code} {team_number}"
+        );
         die();
     }
 
     if (isset($argv[2])) {
         $target_team = $argv[2];
     } else {
-        echo 'Please provide an event as an argument. The proper execution for this script is \n php team-match-turnaround {event_code} {team_number}';
+        print_r(
+            "Please provide an event as an argument. The proper execution for this script is \n" .
+            "php team-match-turnaround {event_code} {team_number}"
+        );
         die();
     }
 
