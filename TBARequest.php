@@ -104,6 +104,24 @@ class TBARequest extends cURLCallable {
 		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/events", $headers, $full_response);
 	}
 
+  /**
+	 * Returns information about all ranking positions and their respective teams
+	 * (defined by the short code) in a given year
+	 * @see For more Information on District Codes see https://github.com/the-blue-alliance/the-blue-alliance/blob/master/consts/district_type.py#L38
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param district_short: String
+	 *                                          The district abbreviation you want data for.
+	 *                                          See above for more information on District Codes
+	 *                                          @param year: Integer
+	 *                                          A specific year you would like to grab data for
+	 *                                          this team. Defaults to current year if not provided.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+  public function getDistrictRankings($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/rankings", $headers, $full_response);
+	}
+
 	/**
 	 * Returns information about all teams competing at a given district event
 	 * (defined by the short code) in a given year
@@ -117,7 +135,7 @@ class TBARequest extends cURLCallable {
 	 *                                          this team. Defaults to current year if not provided.
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getDistrictRankings($request_parameters, $headers = [], $full_response = false) {
+	public function getDistrictTeams($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
 		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/teams", $headers, $full_response);
 	}
