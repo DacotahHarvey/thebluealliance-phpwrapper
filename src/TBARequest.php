@@ -1,10 +1,9 @@
 <?php
 
-namespace tbaAPI;
+namespace TheBlueAlliance_PHPWrapper;
 
-include 'callable.php';
-
-use tbaAPI\cURLCallable as cURLCallable;
+include 'Callable.php';
+use TheBlueAlliance_PHPWrapper\Utils\cURLCallable as cURLCallable;
 
 class TBARequest extends cURLCallable {
 

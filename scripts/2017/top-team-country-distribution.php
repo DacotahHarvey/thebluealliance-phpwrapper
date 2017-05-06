@@ -8,7 +8,8 @@
      * script will look at robots in the top 25. You can update the $range_for_top_teams
      * variable to change the weight
      */
-    include __DIR__ . '/TBARequest.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    use TheBlueAlliance_PHPWrapper\TBARequest;
 
     // This chunk of the code is what handles the evnet that we want to read out of
     // An alternative would be commenting this section out and then hardcoding the
@@ -26,12 +27,12 @@
     }
 
     // Initialize the Library with the required information
-    $tbaRequest = new tbaAPI\TBARequest();
+    $tbaRequest = new TBARequest('Dacotah Harvey', 'team country distribution', 1);
 
     $divisions = explode(', ', $target_divisions);
 
     // Containers that we are going to store data in once it has been parsed
-    $top_team_coyntry_mapping_per_division_array = [];
+    $top_team_country_mapping_per_division_array = [];
     $all_team_mapping_per_division_array = [];
     $range_for_top_teams = 25;
 
@@ -43,7 +44,7 @@
         // The first index of the array is a template for what the rest of the array
         // is going to look like. We can unset this. It will leave us with only
         // ranking data
-        unset($teams[0]);
+        unset($ranking_set[0]);
 
         // Containers we fill each iteration. Once we are finished iterating through
         // all the teams we set this array to the global container
@@ -96,8 +97,8 @@
         // After finishing the team - country mapping we can add a new index
         // for the division to the global array. This will be used below
         // for output
-        $top_team_coyntry_mapping_per_division_array[$division] = $top_teams_count_per_country;
-        $all_team__mapping_per_division_array[$division] = $total_teams_per_country;
+        $top_team_country_mapping_per_division_array[$division] = $top_teams_count_per_country;
+        $all_team_mapping_per_division_array[$division] = $total_teams_per_country;
     }
 
     // This variable array is going to be used to store all the calculated information.
@@ -107,7 +108,7 @@
 
     // Now it's time for output. We can iterate over all of the division values
     // that we have already found to generated our data
-    foreach ($top_team_coyntry_mapping_per_division_array as $division_key => $division_values) {
+    foreach ($top_team_country_mapping_per_division_array as $division_key => $division_values) {
         print_r($division_key . "\n");
 
         // Each inner country that we have stored needs it's information

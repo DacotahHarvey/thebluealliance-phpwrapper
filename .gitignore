@@ -1,1 +1,7 @@
+
+# Default files that are created on OSX
 .DS_Store
+
+# Files that are generated from composer when running scripts
+vendor
+composer.lock

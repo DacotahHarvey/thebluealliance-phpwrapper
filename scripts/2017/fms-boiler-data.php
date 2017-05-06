@@ -9,7 +9,8 @@
      * score_breakdown.
      */
 
-    include __DIR__ . '/TBARequest.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    use TheBlueAlliance_PHPWrapper\TBARequest;
 
     // This chunk of the code is what handles the evnet that we want to read out of
     // An alternative would be commenting this section out and then hardcoding the
@@ -20,7 +21,7 @@
     } else {
         print_r(
             "Please provide an event as an argument. The proper execution for this script is \n" .
-            "php fms-scraper.php {event_code}"
+            "php fms-boiler-data.php {event_code}"
         );
         die();
     }

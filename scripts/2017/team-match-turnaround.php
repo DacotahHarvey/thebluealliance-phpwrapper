@@ -11,7 +11,8 @@
      * to your specific credentials. See the project ReadMe for help.
      */
 
-    include __DIR__ . '/TBARequest.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    use TheBlueAlliance_PHPWrapper\TBARequest;
 
     // This chunk of the code is what handles the evnet that we want to read out of
     // An alternative would be commenting this section out and then hardcoding the
@@ -39,7 +40,7 @@
     }
 
     // Initialize the Library with the required information
-    $tbaRequest = new tbaAPI\TBARequest();
+    $tbaRequest = new TBARequest();
 
     // Retrieve all of the matches that are scheduled to take place at a given
     // event

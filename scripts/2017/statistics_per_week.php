@@ -24,7 +24,8 @@
      * - % Chance to see all 6 Robots Ready for Takeoff Per Match
      */
 
-    include __DIR__ . '/TBARequest.php';
+    require_once __DIR__ . '/../../vendor/autoload.php';
+    use TheBlueAlliance_PHPWrapper\TBARequest;
 
     // This chunk of the code is what handles the evnet that we want to read out of
     // An alternative would be commenting this section out and then hardcoding the
@@ -41,7 +42,7 @@
     }
 
     // Initialize the Library with the required information
-    $tbaRequest = new tbaAPI\TBARequest();
+    $tbaRequest = new TBARequest();
 
     // This array contains all of the items that we are going to keep track of that
     // relate to each alliance. For example if 1 match was played and each alliance

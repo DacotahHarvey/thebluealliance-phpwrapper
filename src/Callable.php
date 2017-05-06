@@ -1,6 +1,6 @@
 <?php
 
-namespace tbaAPI;
+namespace TheBlueAlliance_PHPWrapper\Utils;
 
 /**
  * The cURLCallable class is what allows us to make all of our cURL requests
@@ -102,7 +102,7 @@ class cURLCallable {
 			[
 				CURLOPT_URL 			=> $this->base_url . $url,
 				CURLOPT_RETURNTRANSFER 	=> true,
-				CURLOPT_VERBOSE			=> true,
+				CURLOPT_VERBOSE			=> false,
 				CURLOPT_SSL_VERIFYPEER 	=> false,
 				CURLOPT_FOLLOWLOCATION 	=> true,
 				CURLOPT_HTTPHEADER		=> $request_headers
