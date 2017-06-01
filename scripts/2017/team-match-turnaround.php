@@ -24,7 +24,7 @@
     } else {
         print_r(
             "Please provide an event as an argument. The proper execution for this script is \n" .
-            "php team-match-turnaround {event_code} {team_number}"
+            "php team-match-turnaround.php {event_code} {team_number}"
         );
         die();
     }
@@ -34,7 +34,7 @@
     } else {
         print_r(
             "Please provide an event as an argument. The proper execution for this script is \n" .
-            "php team-match-turnaround {event_code} {team_number}"
+            "php team-match-turnaround.php {event_code} {team_number}"
         );
         die();
     }

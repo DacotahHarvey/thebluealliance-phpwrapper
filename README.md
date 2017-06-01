@@ -1,9 +1,22 @@
 # thebluealliance-phpwrapper
 A PHP wrapper that assists in the use of the API provided by http://www.thebluealliance.com
 
-# Usage
-Currently the project is not included in Composer. Because of that the inclusion
-of it has to be be done manually.
+# Installation
+
+### Composer
+Installing the application through Composer is the fastest way to get all setup.
+To do this navigate to the root of your project in the terminal and run
+
+`composer require dacotahharvey/thebluealliance-phpwrapper`
+
+Then when you use the project include the two following lines at the top of your file
+
+```
+require_once __DIR__ . '/lib/vendor/autoload.php';
+use TheBlueAlliance_PHPWrapper\TBARequest;
+```
+
+### Manually Cloning
 
 1. In your project make a new folder called tbaAPI
 2. Download this repository.
@@ -11,8 +24,10 @@ of it has to be be done manually.
 4. Include the following line at the top of the file that you wish to use the wrapper in
 
 ```
-include $_SERVER['DOCUMENT_ROOT'] . '/tbaapi/TBARequest.php';
+include __DIR__ . '/tbaapi/TBARequest.php';
 ```
+
+# Library Usage
 
 5. Create a new reference to the library like so
 
@@ -40,14 +55,25 @@ Using the var `tba` from above we can do the following
 $result = $tbaRequest->getTeam(['team' => 1114]);
 ```
 
-# Executing a Script
+# Executing a Premade Script
 Executing a php script is very easy once the initial setup has been taken care of.
 The scripts provided with this project will work best with PHP 7, however they will
-also perform with a lower version. To run a PHP script navigate to the folder where
-your script is contained and run
+also perform with a lower version. Running the scripts that are contained within this repository is simple. It can be accomplished using the three following steps
+
+1. Clone the repository
+2. In each of the sciripts you will find the library initalization. You must change this in each of the scripts that you wish to run as currently they empty. You can find more information on how to do this in the Library Usage section of this Readme.
+3. Use the following commands in the terminal. Note that the composer install is only used once to generate the autoload file that must exist to properly use the plugin
 
 ```
-php script_name
+composer install
+cd scripts
+cd 2017
+```
+
+Then choose the file that you want to run. Each script will contain instructions on how to run it. If you try to run a script with improper commands it will tell you how it should be run. An example of a script being executed once you are in the proper directory is
+
+```
+php team-match-turnaround.php 2017dar frc1114
 ```
 
 The script will then run in your terminal instance.
