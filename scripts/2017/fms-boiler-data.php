@@ -27,7 +27,7 @@
     }
 
     // Initialize the Library with the required information
-    $tbaRequest = new tbaAPI\TBARequest();
+    $tbaRequest = new TBARequest();
 
     // Fetch all the matches from the event that we want to look at
     $matches = $tbaRequest->getEventMatches(['event_key' => $target_event]);
@@ -74,7 +74,7 @@
             // next alliance colour. The robot position is used for the column
             // header
             $robot_position = 1;
-            foreach ($alliance_result->teams as $alliance_team_number) {
+            foreach ($alliance_result->team_keys as $alliance_team_number) {
 
                 // Put the data that we want into the proper array
                 if ($alliance_colour === 'red') {

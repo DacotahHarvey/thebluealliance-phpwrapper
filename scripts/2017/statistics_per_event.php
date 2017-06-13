@@ -42,7 +42,7 @@
     }
 
     // Initialize the Library with the required information
-    $tbaRequest = new tbaAPI\TBARequest();
+    $tbaRequest = new TBARequest();
 
     // This array contains all of the items that we are going to keep track of that
     // relate to each alliance. For example if 1 match was played and each alliance

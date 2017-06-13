@@ -44,32 +44,11 @@
 
     // Retrieve all of the matches that are scheduled to take place at a given
     // event
-    $matches = $tbaRequest->getEventMatches(['event_key' => $target_event]);
-
-    // An array of matches that the team took part in. The reason why we have
-    // to store them like this is becuase the API returns the matches in
-    // the wrong order. So we build an array of all the target matches and then
-    // sort it.
-    $target_matches = [];
-
-    foreach ($matches as $match) {
-        foreach ($match->alliances as $alliance_colour => $alliance) {
-            foreach ($alliance->teams as $key => $team) {
-                if ($team == $target_team) {
-                    $target_matches[] = $match;
-
-                    // Skip the rest of this match iteration. We already know that
-                    // this is a target match so we can save some time by skipping
-                    // any additional iterations we may have to do
-                    continue 3;
-                }
-            }
-        }
-    }
+    $matches = $tbaRequest->getTeamEventMatches(['team_key' => $target_team, 'event_key' => $target_event]);
 
     // Now that we have found all of the matches we can sort the array
     // to ensure that they are in the proper order (by time)
-    usort($target_matches, function($first_value, $second_value) {
+    usort($matches, function($first_value, $second_value) {
 
         // If the first match we are comparing occurred before the second match
         // we can return a 0. This will ensure that we are properly ordering everything
@@ -79,7 +58,7 @@
     // This variable is used becuase we use the counted matches twice. One of those
     // counts occur inside the for statement. We save a ton of computations by keeping
     // this variable above
-    $match_count = count($target_matches);
+    $match_count = count($matches);
 
     // Iterate over each of the matches that we have stored. We are going to output
     // the information for each of them. We use a for statement here instead of a
@@ -88,7 +67,7 @@
     for ($i = 0; $i < $match_count; $i++) {
 
         // A shorthand reference to the current match that we are viewing
-        $current_iteration_match = $target_matches[$i];
+        $current_iteration_match = $matches[$i];
 
         // These variables are what we use for the comparisons. We default them
         // as null so that we can tell if we need to show the information below.
@@ -103,7 +82,7 @@
 
             // A shorthand reference to the next match in the iteration. We are going
             // to compare against this match
-            $next_iteration_match = $target_matches[$i + 1];
+            $next_iteration_match = $matches[$i + 1];
             $matches_between = $next_iteration_match->match_number - $current_iteration_match->match_number;
 
             // To figure out how much time is between two dates we can compare

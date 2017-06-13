@@ -27,7 +27,7 @@
     }
 
     // Initialize the Library with the required information
-    $tbaRequest = new TBARequest('Dacotah Harvey', 'team country distribution', 1);
+    $tbaRequest = new TBARequest();
 
     $divisions = explode(', ', $target_divisions);
 
@@ -41,11 +41,6 @@
         // Fetch the the teams in order of rank from TBA
         $ranking_set = $tbaRequest->getEventRankings(['event_key' => $division]);
 
-        // The first index of the array is a template for what the rest of the array
-        // is going to look like. We can unset this. It will leave us with only
-        // ranking data
-        unset($ranking_set[0]);
-
         // Containers we fill each iteration. Once we are finished iterating through
         // all the teams we set this array to the global container
         $top_teams_count_per_country = [];
@@ -54,15 +49,15 @@
         // Used to determine how many teams we are showing
         $iteration_count = 1;
 
-        foreach ($ranking_set as $ranking_position) {
+        foreach ($ranking_set->rankings as $ranking_position) {
 
             // Fetch the teams information. This will allow us to determine
             // Country name
-            $team_info = $tbaRequest->getTeam(['team_key' => 'frc' . $ranking_position[1]]);
+            $team_info = $tbaRequest->getTeam(['team_key' => $ranking_position->team_key]);
 
             // Lowercase the country name so it's easier to work with. This ensures
             // that all data will be consistent
-            $lower_case_country_name = strtolower($team_info->country_name);
+            $lower_case_country_name = strtolower($team_info->country);
 
             // If we are still within our top X then we can add this team to the
             // top teams array
@@ -148,6 +143,6 @@
     print_r("Totals\n---------------------------------\n");
     foreach ($calculated_totals_for_output as $country_name => $country_data) {
         print_r("Total Robots from " . $country_name . ": " . $country_data['total'] . "\n");
-        print_r("Total Robots in top {$range_for_top_teams} " . $country_name . ": " . $country_data['top_teams'] . "\n");
+        print_r("Total Robots in top {$range_for_top_teams} from " . $country_name . ": " . $country_data['top_teams'] . "\n");
         print_r("Percent in top {$range_for_top_teams}: " . round($country_data['top_teams'] / $country_data['total'] * 100) . "%\n\n");
     }

@@ -17,7 +17,7 @@ class TBARequest extends cURLCallable {
 	public $district_base_params =
 	[
 		"year" 				=> 2016,
-	    "district_short" 	=> "ne"
+	    "district_key" 		=> "2016fim"
 	];
 
 	public $event_base_params =
@@ -44,35 +44,494 @@ class TBARequest extends cURLCallable {
 	 * that we will use to make our cURL request the The Blue Alliance.
 	 * This Constructor takes in the information that we need for the unique
 	 * header that we have to send as well as build that header for us
-	 * @param Integer | String $__team                - Team Number / Your Name
-	 * @param String           $__project_description - Short description of what your app is meant to accomplish
-	 * @param Integer | String $__project_version     - The version that your app is currently in
-	 * @param Array            $__options             - Any additional parameters that have been made available
+	 * @param String | String $__api_key              - API Key for your app generated on The Blue Alliance
      *                                                @param Boolean return_json - Whether you want to be returned
      *                                                                             a JSON array straight from the API,
      *                                                                             or an object that can easily be manipulated
      *                                                                             by PHP
 	 */
-	public function  __construct($__team, $__project_description, $__project_version, $__options = []) {
-		parent::__construct($__team, $__project_description, $__project_version, $__options);
+	public function  __construct($__api_key, $__options = []) {
+		parent::__construct($__api_key, $__options);
 	}
 
+	/*----------------------------------------------------------------------
+	----------------------------------TBA-----------------------------------
+	----------------------------------------------------------------------*/
+
+	public function getStatus($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("status", $headers, $full_response);
+	}
+
+	/*----------------------------------------------------------------------
+	----------------------------------Team----------------------------------
+	----------------------------------------------------------------------*/
+
 	/**
-	 * A simple function that allows us to display the response of the server
-	 * in a nice manner. Since everything is returned as JSON you could also use
-	 * a website such as https://jsonformatter.curiousconcept.com/
-	 * @param  ANY $array - The item that you want to display.
+	 * Gets a list of Team objects, paginated in groups of 500.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param page_num: Integer
+	 *                                          A page of teams, zero-indexed. Each page
+	 *                                          consists of teams whose numbers start at
+	 *                                          start = 500 * page_num and end at
+	 *                                          end = start + 499, inclusive.
+	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function prettyPrint($array) {
-		echo "<pre>{$array}</pre>";
+	public function getTeams($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("teams/{$request_parameters['page_num']}", $headers, $full_response);
 	}
 
-	//======================================================================
-	// DISTRICT REQUESTS API https://www.thebluealliance.com/apidocs#district-requests
-	//======================================================================
+	/**
+	 * Gets a list of short form Team_Simple objects, paginated in groups of 500.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param page_num: Integer
+	 *                                          A page of teams, zero-indexed. Each page
+	 *                                          consists of teams whose numbers start at
+	 *                                          start = 500 * page_num and end at
+	 *                                          end = start + 499, inclusive.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamsSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("teams/{$request_parameters['page_num']}/simple", $headers, $full_response);
+	}
 
 	/**
-	 * Returns a list of all Districts and where they take place in a given
+	 * Gets a list of Team keys, paginated in groups of 500. (Note, each page will
+	 * not have 500 teams, but will include the teams within that range of 500.)
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param page_num: Integer
+	 *                                          A page of teams, zero-indexed. Each page
+	 *                                          consists of teams whose numbers start at
+	 *                                          start = 500 * page_num and end at
+	 *                                          end = start + 499, inclusive.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamsKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("teams/{$request_parameters['page_num']}/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of Team objects that competed in the given year, paginated in groups of 500.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param page_num: Integer
+	 *                                          A page of teams, zero-indexed. Each page
+	 *                                          consists of teams whose numbers start at
+	 *                                          start = 500 * page_num and end at
+	 *                                          end = start + 499, inclusive.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamsByYear($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("teams/year/{$request_parameters['page_num']}", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of short form Team_Simple objects that competed in the given year, paginated in groups of 500.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param page_num: Integer
+	 *                                          A page of teams, zero-indexed. Each page
+	 *                                          consists of teams whose numbers start at
+	 *                                          start = 500 * page_num and end at
+	 *                                          end = start + 499, inclusive.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamsByYearSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("teams/year/{$request_parameters['page_num']}/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list Team Keys that competed in the given year, paginated in groups of 500.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param page_num: Integer
+	 *                                          A page of teams, zero-indexed. Each page
+	 *                                          consists of teams whose numbers start at
+	 *                                          start = 500 * page_num and end at
+	 *                                          end = start + 499, inclusive.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamsByYearkeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("teams/year/{$request_parameters['page_num']}/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a Team object for the team referenced by the given key.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeam($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a Team_Simple object for the team referenced by the given key.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of years in which the team participated in at least one competition.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamYearsParticipated($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/years_participated", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list or year and district pairs to denote each year the team was in a
+	 * district. Will return an empty array if the team was never in a district.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamDistricts($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/districts", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of year and robot name pairs for each year that a robot name was
+	 * provided. Will return an empty array if the team has never named a robot.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamRobots($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/robots", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of all events this team has competed at.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEvents($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/events", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a short-form list of all events this team has competed at.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventsSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/events/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of the event keys for all events this team has competed at
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventsKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/events/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of events this team has competed at in the given year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventsForYear($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/events/{$request_parameters['year']}", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a short-form list of events this team has competed at in the given year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventsForYearSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/events/{$request_parameters['year']}/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of the event keys for events this team has competed at in the given year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventsForYearKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/events/{$request_parameters['year']}/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of matches for the given team and event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventMatches($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/matches", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a short-form list of matches for the given team and event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventMatchesSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/matches/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of match keys for matches for the given team and event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventMatchesKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/matches/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of awards the given team won at the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventAwards($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/awards", $headers, $full_response);
+	}
+
+	/**
+	 * Gets the competition rank and status of the team at the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamEventStatus($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/status", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of awards the given team has won.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamAwards($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/awards", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of awards the given team has won in a given year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamAwardsForYear($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/awards/{$request_parameters['year']}", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of matches for the given team and year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamMatchesForYear($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/matches/{$request_parameters['year']}", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a short-form list of matches for the given team and year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamMatchesForYearSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/matches/{$request_parameters['year']}/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of match keys for matches for the given team and year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamMatchesForYearKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/matches/{$request_parameters['year']}/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of Media (videos / pictures) for the given team and year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 *                                          @param year: String
+	 *                                          The year that you want to search for in the format
+	 *                                          yyyy
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamMediaForyear($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/media/{$request_parameters['year']}", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of Media (social media) for the given team.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param team_key: String
+	 *                                          A team key name where the format is frcyyyy where
+	 *                                          yyyy is the a valid, official team number issued
+	 *                                          by FIRST
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getTeamSocialMedia($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->team_base_params, $request_parameters);
+		return $this->call("team/{$request_parameters['team_key']}/social_media", $headers, $full_response);
+	}
+
+	/*----------------------------------------------------------------------
+	--------------------------------District--------------------------------
+	----------------------------------------------------------------------*/
+
+	/**
+	 * Gets a list of districts and their corresponding district key, for the given year.
 	 * year
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param year: Integer
@@ -80,84 +539,154 @@ class TBARequest extends cURLCallable {
 	 *                                          this team. Defaults to current year if not provided.
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getDistrictList($request_parameters, $headers = [], $full_response = false) {
+	public function getDistricts($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
 		return $this->call("districts/{$request_parameters['year']}", $headers, $full_response);
 	}
 
 	/**
-	 * Returns detailed information about all the district events
-	 * in a given district (defined by the short code) in a given year
-	 * @see For more Information on District Codes see https://github.com/the-blue-alliance/the-blue-alliance/blob/master/consts/district_type.py#L38
+	 * Gets a list of events in the given district.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param district_short: String
-	 *                                          The district abbreviation you want data for.
-	 *                                          See above for more information on District Codes
-	 *                                          @param year: Integer
-	 *                                          A specific year you would like to grab data for
-	 *                                          this team. Defaults to current year if not provided.
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getDistrictEvents($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
-		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/events", $headers, $full_response);
-	}
-
-  /**
-	 * Returns information about all ranking positions and their respective teams
-	 * (defined by the short code) in a given year
-	 * @see For more Information on District Codes see https://github.com/the-blue-alliance/the-blue-alliance/blob/master/consts/district_type.py#L38
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param district_short: String
-	 *                                          The district abbreviation you want data for.
-	 *                                          See above for more information on District Codes
-	 *                                          @param year: Integer
-	 *                                          A specific year you would like to grab data for
-	 *                                          this team. Defaults to current year if not provided.
-	 * @return {[JSON]}            				- Response from the request
-	 */
-  public function getDistrictRankings($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->district_base_params, $request_parameters);
-		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/rankings", $headers, $full_response);
+		return $this->call("districts/{$request_parameters['district_key']}", $headers, $full_response);
 	}
 
 	/**
-	 * Returns information about all teams competing at a given district event
-	 * (defined by the short code) in a given year
-	 * @see For more Information on District Codes see https://github.com/the-blue-alliance/the-blue-alliance/blob/master/consts/district_type.py#L38
+	 * Gets a short-form list of events in the given district.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param district_short: String
-	 *                                          The district abbreviation you want data for.
-	 *                                          See above for more information on District Codes
-	 *                                          @param year: Integer
-	 *                                          A specific year you would like to grab data for
-	 *                                          this team. Defaults to current year if not provided.
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getDistrictEventsSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("districts/{$request_parameters['district_key']}/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of event keys for events in the given district.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getDistrictEventsKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("districts/{$request_parameters['district_key']}/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of Team objects that competed in events in the given district.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
 	 * @return {[JSON]}            				- Response from the request
 	 */
 	public function getDistrictTeams($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->district_base_params, $request_parameters);
-		return $this->call("district/{$request_parameters['district_short']}/{$request_parameters['year']}/teams", $headers, $full_response);
+		return $this->call("districts/{$request_parameters['district_key']}/teams", $headers, $full_response);
 	}
 
-	//======================================================================
-	// EVENT REQUESTS API https://www.thebluealliance.com/apidocs#event-requests
-	//======================================================================
+	/**
+	 * Gets a short-form list of Team objects that competed in events in the given district.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getDistrictTeamsSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("districts/{$request_parameters['district_key']}/teams/simple", $headers, $full_response);
+	}
 
 	/**
-	 * Returns all events that took place in a given year
+	 * Gets a list of Team objects that competed in events in the given district.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getDistrictTeamsKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("districts/{$request_parameters['district_key']}/teams/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of team district rankings for the given district.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param district_key: String
+	 *                                          TBA district key with the format yyyy[DISTRICT_CODE],
+	 *                                          where yyyy is the year, and DISTRICT_CODE is the
+	 *                                          district code of the specific district.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getDistrictRankings($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->district_base_params, $request_parameters);
+		return $this->call("districts/{$request_parameters['district_key']}/rankings", $headers, $full_response);
+	}
+
+	/*----------------------------------------------------------------------
+	---------------------------------Event----------------------------------
+	----------------------------------------------------------------------*/
+
+	/**
+	 * Gets a list of events in the given year.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param year: Integer
 	 *                                          A specific year you would like to grab data for
 	 *                                          this team. Defaults to current year if not provided.
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getEvents($request_parameters, $headers = [], $full_response = false) {
+	public function getEventsForYear($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
 		return $this->call("events/{$request_parameters['year']}", $headers, $full_response);
 	}
 
 	/**
-	 * Returns information about a given event
+	 * Gets a short-form list of events in the given year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param year: Integer
+	 *                                          A specific year you would like to grab data for
+	 *                                          this team. Defaults to current year if not provided.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventsForYearSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("events/{$request_parameters['year']}/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of event keys in the given year.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param year: Integer
+	 *                                          A specific year you would like to grab data for
+	 *                                          this team. Defaults to current year if not provided.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventsForYearKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("events/{$request_parameters['year']}/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets an Event.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param event_key: String
 	 *                                          TBA event key with the format yyyy[EVENT_CODE],
@@ -171,7 +700,7 @@ class TBARequest extends cURLCallable {
 	}
 
 	/**
-	 * Returns a list of teams the participated at a given event
+	 * Gets a short-form Event.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param event_key: String
 	 *                                          TBA event key with the format yyyy[EVENT_CODE],
@@ -179,13 +708,13 @@ class TBARequest extends cURLCallable {
 	 *                                          event code of the event.
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getEventTeams($request_parameters, $headers = [], $full_response = false) {
+	public function getEventSimple($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters['event_key']}/teams", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/simple", $headers, $full_response);
 	}
 
 	/**
-	 * Returns the resuls of all matches at a given event
+	 * Gets a list of Elimination Alliances for the given Event.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param event_key: String
 	 *                                          TBA event key with the format yyyy[EVENT_CODE],
@@ -193,13 +722,13 @@ class TBARequest extends cURLCallable {
 	 *                                          event code of the event.
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getEventMatches($request_parameters, $headers = [], $full_response = false) {
+	public function getEventAlliances($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters['event_key']}/matches", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/alliances", $headers, $full_response);
 	}
 
 	/**
-	 * Returns detailed statistics for all teams at a given event
+	 * Gets a set of Event-specific insights for the given Event.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param event_key: String
 	 *                                          TBA event key with the format yyyy[EVENT_CODE],
@@ -207,14 +736,43 @@ class TBARequest extends cURLCallable {
 	 *                                          event code of the event.
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getEventStats($request_parameters, $headers = [], $full_response = false) {
+	public function getEventInsights($request_parameters, $headers = [], $full_response = false) {
 		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters['event_key']}/stats", $headers, $full_response);
+		return $this->call("event/{$request_parameters['event_key']}/insights", $headers, $full_response);
 	}
 
 	/**
-	 * Returns detailed information regarding all teams that participated
-	 * at a given event
+	 * Gets a set of Event OPRs (including OPR, DPR, and CCWM) for the given Event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventOPRs($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/oprs", $headers, $full_response);
+	}
+
+	/**
+	 * Gets information on TBA-generated predictions for the given Event.
+	 * Contains year-specific information. WARNING This endpoint is currently
+	 * under development and may change at any time.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventPredictions($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/predictions", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of team rankings for the Event.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param event_key: String
 	 *                                          TBA event key with the format yyyy[EVENT_CODE],
@@ -228,7 +786,105 @@ class TBARequest extends cURLCallable {
 	}
 
 	/**
-	 * Returns information regarding all awards awarded at a given event
+	 * Gets a list of team rankings for the Event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventDistrictPoints($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/district_points", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of Team objects that competed in the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventTeams($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/teams", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a short-form list of Team objects that competed in the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventTeamsSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/teams/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of Team keys that competed in the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventTeamsKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/teams/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of matches for the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventMatches($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/matches", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a short-form list of matches for the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventMatchesSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/matches/simple", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of match keys for the given event.
+	 * @param  {[Array]}   $request_parameters  - Options for the URL
+	 *                                          @param event_key: String
+	 *                                          TBA event key with the format yyyy[EVENT_CODE],
+	 *                                          where yyyy is the year, and EVENT_CODE is the
+	 *                                          event code of the event.
+	 * @return {[JSON]}            				- Response from the request
+	 */
+	public function getEventMatchesKeys($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+		return $this->call("event/{$request_parameters['event_key']}/matches/keys", $headers, $full_response);
+	}
+
+	/**
+	 * Gets a list of awards from the given event.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param event_key: String
 	 *                                          TBA event key with the format yyyy[EVENT_CODE],
@@ -241,216 +897,31 @@ class TBARequest extends cURLCallable {
 		return $this->call("event/{$request_parameters['event_key']}/awards", $headers, $full_response);
 	}
 
-	/**
-	 * Returns informaton regarding distric points at a given event
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param event_key: String
-	 *                                          TBA event key with the format yyyy[EVENT_CODE],
-	 *                                          where yyyy is the year, and EVENT_CODE is the
-	 *                                          event code of the event.
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getEventDistricPoints($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("event/{$request_parameters['event_key']}/district_points", $headers, $full_response);
-	}
-
-	//======================================================================
-	// MATCH REQUESTS API https://www.thebluealliance.com/apidocs#match-requests
-	//======================================================================
+	/*----------------------------------------------------------------------
+	---------------------------------Match----------------------------------
+	----------------------------------------------------------------------*/
 
 	/**
-	 * returns all information regarding a single match.
+	 * Gets a Match object for the given match key.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
 	 *                                          @param match_key: String
 	 *                                          Key for the match you want to request data for
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getSingleMatch($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
+	public function getMatch($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->match_base_params, $request_parameters);
 		return $this->call("match/{$request_parameters['match_key']}", $headers, $full_response);
 	}
 
-	//======================================================================
-	// TEAM REQUESTS API https://www.thebluealliance.com/apidocs#team-requests
-	//======================================================================
-
 	/**
-	 * Returns all teams in a pages format
+	 * Gets a short-form Match object for the given match key.
 	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param page_num: Integer
-	 *                                          A page of teams, zero-indexed. Each page
-	 *                                          consists of teams whose numbers start at
-	 *                                          start = 500 * page_num and end at
-	 *                                          end = start + 499, inclusive.
+	 *                                          @param match_key: String
+	 *                                          Key for the match you want to request data for
 	 * @return {[JSON]}            				- Response from the request
 	 */
-	public function getTeams($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("teams/{$request_parameters['page_num']}", $headers, $full_response);
-	}
-
-	/**
-	 * Returns all information about a given team
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeam($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}", $headers, $full_response);
-	}
-
-	/**
-	 * Returns all information regarding all events a given team attended
-	 * in a given year
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 *                                          @param year: Integer
-	 *                                          A specific year you would like to grab data for
-	 *                                          this team. Defaults to current year if not provided.
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamEvents($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/events", $headers, $full_response);
-	}
-
-	/**
-	 * Returns all awards won by a given team at a given event
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 *                                          @param event_key: String
-	 *                                          TBA event key with the format yyyy[EVENT_CODE],
-	 *                                          where yyyy is the year, and EVENT_CODE is the
-	 *                                          event code of the event.
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamEventAwards($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/awards", $headers, $full_response);
-	}
-
-	/**
-	 * Returns all matches that a given team participated in at a given event
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 *                                          @param event_key: String
-	 *                                          TBA event key with the format yyyy[EVENT_CODE],
-	 *                                          where yyyy is the year, and EVENT_CODE is the
-	 *                                          event code of the event.
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamEventMatches($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/event/{$request_parameters['event_key']}/matches", $headers, $full_response);
-	}
-
-	/**
-	 * Returns all the years that a given team has participated in FRC
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamYearsParticipated($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/years_participated", $headers, $full_response);
-	}
-
-	/**
-	 * Returns any media that is stored on hand for a given team
-	 * (Such as a youtube channel)
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 *                                          @param event_key: String
-	 *                                          TBA event key with the format yyyy[EVENT_CODE],
-	 *                                          where yyyy is the year, and EVENT_CODE is the
-	 *                                          event code of the event.
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamMedia($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/{$request_parameters['year']}/media", $headers, $full_response);
-	}
-
-	//======================================================================
-	// TEAM HISTORY REQUESTS API https://www.thebluealliance.com/apidocs#team-requests
-	//======================================================================
-
-	/**
-	 * Returns the outcome of a given team at every event they have competed in
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamEventHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/history/events", $headers, $full_response);
-	}
-
-	/**
-	 * Returns any awards that a given team has won at any event they have attended
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamAwardHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/history/awards", $headers, $full_response);
-	}
-
-	/**
-	 * Returns information on the Robot that a given team has used
-	 * in every respective year that they have competed
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamRobotHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/history/robots", $headers, $full_response);
-	}
-
-	/**
-	 * Returns information about a given team at any distric they have
-	 * attended
-	 * @param  {[Array]}   options  - Options for the URL
-	 * @param  {[Array]}   $request_parameters  - Options for the URL
-	 *                                          @param team_key: String
-	 *                                          A team key name where the format is frcyyyy where
-	 *                                          yyyy is the a valid, official team number issued
-	 *                                          by FIRST
-	 * @return {[JSON]}            				- Response from the request
-	 */
-	public function getTeamDistricHistory($request_parameters, $headers = [], $full_response = false) {
-		$request_parameters = array_merge($this->event_base_params, $request_parameters);
-		return $this->call("team/{$request_parameters['team_key']}/history/districts", $headers, $full_response);
+	public function getMatchSimple($request_parameters, $headers = [], $full_response = false) {
+		$request_parameters = array_merge($this->match_base_params, $request_parameters);
+		return $this->call("match/{$request_parameters['match_key']}", $headers, $full_response);
 	}
 }

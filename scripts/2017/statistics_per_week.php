@@ -74,7 +74,7 @@
     ];
 
     // Fetch all of the events that we want to fetch for a given year
-    $events = $tbaRequest->getEvents(['year' => '2017']);
+    $events = $tbaRequest->getEventsForYear(['year' => '2017']);
 
     // Iterate over each one of the events to pull the FMS data
     foreach ($events as $event) {
