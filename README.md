@@ -29,16 +29,18 @@ include __DIR__ . '/tbaapi/TBARequest.php';
 
 # Library Usage
 
-5. Create a new reference to the library like so
+To use this library you need to have an API Key from The Blue Alliance. You can find more information on how to do this
+here https://www.thebluealliance.com/apidocs
+
+1. Create a new reference to the library like so
+```
+$tbaRequest = new tbaAPI\TBARequest(api_key);
+```
+
+2. Call the functions provided to retrieve your data like so
 
 ```
-$tbaRequest = new tbaAPI\TBARequest(team_number_or_name, application_name, application_version);
-```
-
-6. Call the functions provided to retrieve your data like so
-
-```
-echo $tbaRequest->getDistrictList(['year' => 2016]);
+echo $tbaRequest->getDistricts(['year' => 2016]);
 ```
 
 All of the functions provided by the wrapper take the same three paramters
